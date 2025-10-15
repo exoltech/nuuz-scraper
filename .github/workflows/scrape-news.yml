@@ -1,0 +1,30 @@
+name: Auto-Scrape News Every 30 Minutes
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🤖 Scrape News
+        run: |
+          echo "🚀 Starting scrape at $(date)"
+          
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://yccsnkufqiutfiaiqvrr.supabase.co/functions/v1/scrape-news" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
+          
+          echo "📊 Response: $body"
+          
+          if [ "$http_code" = "200" ]; then
+            echo "✅ Success!"
+          else
+            echo "❌ Failed with code: $http_code"
+            exit 1
+          fi
