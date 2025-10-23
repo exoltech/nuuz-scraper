@@ -2,8 +2,8 @@ name: Auto-Scrape News Every 30 Minutes
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # Every 30 minutes
-  workflow_dispatch: # Manual trigger
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
 
 jobs:
   scrape:
@@ -15,7 +15,6 @@ jobs:
         run: |
           echo "🚀 Starting scrape at $(date)"
           
-          # Retry configuration
           MAX_RETRIES=3
           RETRY_DELAY=10
           
@@ -25,7 +24,7 @@ jobs:
             response=$(curl -s -w "\n%{http_code}" -X POST \
               --max-time 300 \
               --connect-timeout 30 \
-              "https://yccsnkufqiutfiaiqvrr.supabase.co/functions/v1/scrape-news" \
+              "https://eaucnionyjbsiwvdfpvp.supabase.co/functions/v1/scrape-news" \
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
               -H "Content-Type: application/json")
             
